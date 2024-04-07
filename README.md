@@ -2,6 +2,9 @@
 
 This project is a CLI tool to help Dungeon Masters prepare for their sessions by allowing OpenAI Chat Completions to _fill in the blanks_.
 
+It can be used on any type of file and _setting_, but it is specifically designed for Dungeons & Dragons campaigns. 
+The only hard-coded part is some custom written prompts surrounding the Markdown files, which could easily be edited in DndAssistant.kt.
+
 ## Setup
 
 1. Follow build instructions to get an executable jar file.
@@ -99,3 +102,14 @@ Files can be included in other files using the `include` directive.
 
 Paths are relative to the file they are included in.
 When absolute the root is the root configured in the configuration file.
+
+## Roadmap
+
+- `create` subcommand
+  - remove hardcoded lore/prompts, move them to header/footers files referenced in the config
+  - keep / retry / edit TUI for accepting the completion suggestions.
+  - add a flag to accept all completions and replace in file.
+  - add a flag to accept all completions and create a new file.
+- Markdown extension
+  - `!include` directive
+    - Use the supported environment syntax as variables in included files (e.g. `!include: human.md health=10,ac=12`)
