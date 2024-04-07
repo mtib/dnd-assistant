@@ -17,7 +17,7 @@ Files can be included in other files using the `include` directive.
 ```md
 # Background 
 
-include: ./path/to/file.md
+!include: ./path/to/file.md
 
 ## More stuff
 
