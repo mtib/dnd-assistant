@@ -2,10 +2,12 @@ package dev.mtib.dnd.ai.storage.modules
 
 import dev.mtib.dnd.ai.storage.config.Configuration.DndConfigRc
 import dev.mtib.dnd.ai.storage.markdown.ExtendedMarkdown
+import dev.mtib.dnd.ai.storage.markdown.Markdown
 import dev.mtib.dnd.ai.storage.modules.FileSystemModuleStorage.FileSystemModule
 import java.nio.file.Path
 import kotlin.io.path.Path
 import kotlin.io.path.readText
+import kotlin.io.path.writeText
 
 class FileSystemModuleStorage(private val config: DndConfigRc): ModuleStorage<FileSystemModule> {
 
@@ -45,7 +47,7 @@ class FileSystemModuleStorage(private val config: DndConfigRc): ModuleStorage<Fi
         }
 
         companion object {
-            fun of(path: String, cwd: AbsoluteProjectPath): ProjectPath {
+            fun of(path: String, cwd: AbsoluteProjectPath = AbsoluteProjectPath("/")): ProjectPath {
                 return if (path.startsWith("/")) {
                     AbsoluteProjectPath(path)
                 } else {
@@ -64,11 +66,17 @@ class FileSystemModuleStorage(private val config: DndConfigRc): ModuleStorage<Fi
         }
     }
 
-    override fun store(key: ModuleStorage.Key, data: FileSystemModule) {
-
+    override fun store(key: ModuleStorage.Key, data: ExtendedMarkdown) {
+        if (key !is ProjectPath) {
+            throw IllegalArgumentException("Invalid key type: ${key.javaClass}")
+        }
+        key.toNioPath(config).writeText(data.content)
     }
 
     override fun retrieveOrNull(key: ModuleStorage.Key): FileSystemModule? {
-        TODO("Not yet implemented")
+        if (key !is ProjectPath) {
+            throw IllegalArgumentException("Invalid key type: ${key.javaClass}")
+        }
+        return FileSystemModule(key, config)
     }
 }

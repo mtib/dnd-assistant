@@ -4,7 +4,6 @@ import com.aallam.openai.api.chat.ChatCompletionRequest
 import com.aallam.openai.api.chat.ChatMessage
 import com.aallam.openai.api.chat.ChatResponseFormat
 import com.aallam.openai.api.chat.ChatRole
-import com.aallam.openai.api.completion.CompletionRequest
 import com.aallam.openai.api.http.Timeout
 import com.aallam.openai.api.logging.LogLevel
 import com.aallam.openai.api.model.ModelId
@@ -34,28 +33,28 @@ class OpenAiManager private constructor(
         )
     }
 
-    private fun List<String>.toCompletionRequest(): ChatCompletionRequest = ChatCompletionRequest(
+    private fun String.toChatMessage(role: ChatRole = ChatRole.User) = ChatMessage(
+        role = role,
+        content = this,
+    )
+
+    private fun List<ChatMessage>.toCompletionRequest(): ChatCompletionRequest = ChatCompletionRequest(
         model = ModelId(model.model),
-        messages = this.map {
-            ChatMessage(
-                role = ChatRole.User,
-                content = it,
-            )
-        },
+        messages = this,
         n = 1,
         user = "dnd-assistant-cli",
         maxTokens = 1024,
     )
 
-    private fun List<String>.toJsonCompletionRequest(): ChatCompletionRequest = this.toCompletionRequest().let {
-        ChatCompletionRequest(
-            model = it.model,
-            messages = it.messages,
-            n = it.n,
-            user = it.user,
-            maxTokens = it.maxTokens,
-            responseFormat = ChatResponseFormat.JsonObject,
-        )
+    private fun List<String>.toCompletionRequest(role: ChatRole = ChatRole.User): ChatCompletionRequest = this.map {
+        it.toChatMessage(role)
+    }.toCompletionRequest()
+
+    suspend fun promptWithData(data: String, prompt: String): String {
+        return client.chatCompletion(listOf(
+            data.toChatMessage(ChatRole.System),
+            prompt.toChatMessage(ChatRole.User)
+        ).toCompletionRequest()).choices.first().message.content!!
     }
 
     suspend fun simpleResponse(prompt: String): String {

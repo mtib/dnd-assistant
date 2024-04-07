@@ -1,5 +1,12 @@
 # D&D Assistant
 
+## Setup
+
+```bash
+./gradlew fatJar
+java -jar assistant-cli/build/libs/assistant-cli-fat-*.jar complete -c assistant-cli/dndrc.yaml 
+```
+
 ## Design
 
 ### Configuration and State
