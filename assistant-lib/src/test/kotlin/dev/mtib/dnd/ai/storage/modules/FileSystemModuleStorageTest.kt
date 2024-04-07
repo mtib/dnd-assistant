@@ -1,6 +1,7 @@
 package dev.mtib.dnd.ai.storage.modules
 
 import dev.mtib.dnd.ai.storage.config.Configuration
+import dev.mtib.dnd.ai.storage.modules.FileSystemModuleStorage
 import org.junit.jupiter.api.Assertions.*
 import kotlin.test.Test
 

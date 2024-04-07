@@ -1,5 +1,6 @@
 package dev.mtib.dnd.ai.storage.markdown
 
+import dev.mtib.dnd.ai.storage.markdown.ExtendedMarkdown
 import dev.mtib.dnd.ai.storage.modules.MemoryModuleStorage
 import dev.mtib.dnd.ai.utils.asKey
 import org.junit.jupiter.api.Assertions.*
